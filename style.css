@@ -1,0 +1,41 @@
+html *
+{
+   font-family: Helvetica, arial !important;
+   font-size: 120% !important;
+}
+html, body {
+    padding: 0;
+	text-align: center;
+	color: Azure;
+}
+canvas {
+    display: block;
+	padding: 5px 5px;
+	margin: auto;
+}
+iframe {
+	display: block;
+	padding: 5px 5px;
+	margin: auto;
+}
+a {
+	background-color: azure;
+	color: DodgerBlue;
+	padding: 14px 25px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+}
+input {
+    display: inline-block;	
+	text-align: center;
+}
+h1, h2, h3 {
+	border:2px solid DodgerBlue;
+}
+body{
+	background-image: url('background.png');
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: 100% 100%;
+}
