@@ -1,2 +1,2 @@
 # Pentago
- hte game of pentago replicated in p5.js
+ the game of pentago replicated in javascript using p5.js
