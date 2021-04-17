@@ -2,12 +2,13 @@ var board;
 var turn;
 var status;
 var spinw, spinx, spiny, spinz;
-var isSpun, isPlaced, isTurn;
+var isSpun, isPlaced, isTurn, isWin;
 var botPicker;
 var botMover;
 
 function setup() {
   isPlaced = false;
+  isWin = false;
   board = createGrid(6, 6);
   createCanvas(600, 600);
   isSpun = false;
@@ -111,32 +112,34 @@ function mousePressed() {
 }
 
 function placeBall(x, y, t) {
-  if (x <= 6 && y <= 6) {
+  if (x <= 6 && y <= 6 && !isWin) {
     if(board[x][y] == 0) {
       board[x][y] = t;
       var aaa = createSpan(placementToText(x, y));
       //createDOM(placementToText(gx, gy));
       isPlaced = true;
       isSpun = false;
-      checkForWinner();
+
     }
   }
 }
 
 function spinGrid(word) {
-  switch(word) {
-    case "W":
-      rotateGrid(0, 0);
-      break;
-    case "X":
-      rotateGrid(3, 0);
-      break;
-    case "Y":
-      rotateGrid(0, 3);
-      break;
-    case "Z":
-      rotateGrid(3, 3);
-      break;
+  if(!isWin) {
+    switch(word) {
+      case "W":
+        rotateGrid(0, 0);
+        break;
+      case "X":
+        rotateGrid(3, 0);
+        break;
+      case "Y":
+        rotateGrid(0, 3);
+        break;
+      case "Z":
+        rotateGrid(3, 3);
+        break;
+    }
   }
 }
 
@@ -172,7 +175,7 @@ function rotateGrid(ox, oy) {
     }
     isPlaced = false;
     //isSpun = true;
-    checkForWinner();
+
     if(ox == 0 && oy == 0) {
       var ss = createSpan("W, ");
     }
@@ -185,9 +188,8 @@ function rotateGrid(ox, oy) {
     if(ox == 3 && oy == 3) {
       var ss = createSpan("Z, ");
     }
+    checkForWinner();
   }  
-
-
 }
 
 function placementToText(x, y) {
@@ -213,6 +215,7 @@ function spinZ() {
 }
 
 function isWinner() {
+  console.time("winEvaluation");
   var res = 0;
 
   var countA = 0;
@@ -225,11 +228,13 @@ function isWinner() {
 
       if(val == 1) {
         countA++;
+        countB = 0;
         occupiedSpots++;
       }
 
       if(val == 2) {
         countB++;
+        countA = 0;
         occupiedSpots++;
       }
 
@@ -240,10 +245,12 @@ function isWinner() {
      // console.log(countA);
       //console.log(countB);
       if(countA >= 5) {
+        console.timeEnd("winEvaluation");
         return 1;
       } 
 
       if(countB >= 5) {
+        console.timeEnd("winEvaluation");
         return 2;
       }
     }
@@ -261,12 +268,12 @@ function isWinner() {
 
       if(val == 1) {
         countA++;
-        occupiedSpots++;
+        countB = 0;
       }
 
       if(val == 2) {
         countB++;
-        occupiedSpots++;
+        countA = 0;
       }
 
       if(val == 0) {
@@ -276,12 +283,17 @@ function isWinner() {
       //console.log(countA);
       //console.log(countB);
       if(countA >= 5) {
+        console.timeEnd("winEvaluation");
         return 1;
       } 
 
       if(countB >= 5) {
+        console.timeEnd("winEvaluation");
         return 2;
       }
+
+      countA = 0;
+      countB = 0;
     }
 
     countA = 0;
@@ -289,9 +301,11 @@ function isWinner() {
   }
 
   if(occupiedSpots == 36) {
+    console.timeEnd("winEvaluation");
     return -1;
   }
 
+  console.timeEnd("winEvaluation");
   return 0;
 }
 
@@ -299,25 +313,34 @@ function checkForWinner() {
   var winner = isWinner();
 
   if(winner == 1) {
+    var space = createP("");
     var win = createA("index.html", "WHITE WINS!");
     console.log("White wins");
-
+    isWin = true;
   }
   if(winner == 2) {
+    var space = createP("");
     var win = createA("index.html", "BLACK WINS!");
     console.log("Black wins");
+    isWin = true;
   }
   if(winner == -1) {
+    var space = createP("");
     var win = createA("index.html", "STALEMATE");
     console.log("stalemate");
+    isWin = true;
   }
 
   //console.log("Nobody wins:(");
 }
 
 function botMove() {
+  console.time("Bot: " + botPicker.value()  +" is thinking..." );
   if(botPicker.value() == "Random") {
     makeRandomMove();
+    
   }
+
+  console.timeEnd("Bot: " + botPicker.value()  +" is thinking..." );
 }
 

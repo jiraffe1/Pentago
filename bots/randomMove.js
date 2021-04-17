@@ -15,7 +15,7 @@ function makeRandomMove() {
 
   m = floor(random(0, 4));
 
-  console.log(m);
+  //console.log(m);
 
   switch(m) {
     case 0:
