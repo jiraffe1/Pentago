@@ -105,21 +105,22 @@ function mousePressed() {
   var gx = floor(mouseX / (width / 6));
   var gy = floor(mouseY / (width / 6));
 
-  if(board[gx][gy] == 0 && !isPlaced) {
-    if (gx <= 6 && gy <= 6) {
-      placeBall(gx, gy, turn);
-      //console.log(placementToText(gx, gy));
-      var aaa = createSpan(placementToText(gx, gy));
-      //createDOM(placementToText(gx, gy));
-      isPlaced = true;
-      isSpun = false;
-    }
+  if(!isPlaced) {
+    placeBall(gx, gy, turn);    
   }
 }
 
 function placeBall(x, y, t) {
-  board[x][y] = t;
-  checkForWinner();
+  if (x <= 6 && y <= 6) {
+    if(board[x][y] == 0) {
+      board[x][y] = t;
+      var aaa = createSpan(placementToText(x, y));
+      //createDOM(placementToText(gx, gy));
+      isPlaced = true;
+      isSpun = false;
+      checkForWinner();
+    }
+  }
 }
 
 function spinGrid(word) {
@@ -216,6 +217,7 @@ function isWinner() {
 
   var countA = 0;
   var countB = 0;
+  var occupiedSpots = 0;
 
   for(var i = 0; i < 6; i++) {
     for(var j = 0; j < 6; j++) {
@@ -223,10 +225,12 @@ function isWinner() {
 
       if(val == 1) {
         countA++;
+        occupiedSpots++;
       }
 
       if(val == 2) {
         countB++;
+        occupiedSpots++;
       }
 
       if(val == 0) {
@@ -248,16 +252,21 @@ function isWinner() {
     countB = 0;
   }
 
+  countA = 0;
+  countB = 0;
+
   for(var i = 0; i < 6; i++) {
     for(var j = 0; j < 6; j++) {
       var val = board[j][i];
 
       if(val == 1) {
         countA++;
+        occupiedSpots++;
       }
 
       if(val == 2) {
         countB++;
+        occupiedSpots++;
       }
 
       if(val == 0) {
@@ -279,6 +288,10 @@ function isWinner() {
     countB = 0;
   }
 
+  if(occupiedSpots == 36) {
+    return -1;
+  }
+
   return 0;
 }
 
@@ -294,8 +307,12 @@ function checkForWinner() {
     var win = createA("index.html", "BLACK WINS!");
     console.log("Black wins");
   }
+  if(winner == -1) {
+    var win = createA("index.html", "STALEMATE");
+    console.log("stalemate");
+  }
 
-  console.log("Nobody wins:(");
+  //console.log("Nobody wins:(");
 }
 
 function botMove() {

@@ -15,29 +15,20 @@ function makeRandomMove() {
 
   m = floor(random(0, 4));
 
+  console.log(m);
+
   switch(m) {
     case 0:
       spinGrid("W");
-      console.log("W")
       break;
     case 1:
       spinGrid("X");
-      console.log("X");
       break;
     case 2:
       spinGrid("Y");
-      console.log("Y");
       break;
     case 3:
       spinGrid("Z");
-      console.log("Z");
       break;
-  }
-
-  try{ 
-    spinGrid("W");
-  }
-  catch {
-    console.log("Ah. monke");
   }
 }
