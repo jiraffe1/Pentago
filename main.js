@@ -3,8 +3,10 @@ var turn;
 var status;
 var spinw, spinx, spiny, spinz;
 var isSpun, isPlaced, isTurn, isWin;
-var botPicker;
+var botPickerW;
+var botPickerB;
 var botMover;
+var botOptions = ["Random", "First Move", "Last Move"];
 
 function setup() {
   isPlaced = false;
@@ -26,12 +28,16 @@ function setup() {
   spinz.mousePressed(spinZ);
   var p3 = createP("");
   var p4 = createP("");
-  botPicker = createSelect();
-  botPicker.option("Random");
-  botPicker.option("First Move");
-  botPicker.option("Last Move");
-  botMover = createButton("Ask the Bot what to do");
+  botPickerW = createSelect();
+  for(var a = 0; a < botOptions.length; a++) {
+    botPickerW.option(botOptions[a]);
+  }
+  botMover = createButton("Make Bot move");
   botMover.mousePressed(botMove);
+  botPickerB = createSelect();
+  for(var b = 0; b < botOptions.length; b++) {
+    botPickerB.option(botOptions[b]);
+  }
   var p6 = createP("");
   status = createP("Moves: ");
 }
@@ -112,7 +118,7 @@ function mousePressed() {
 }
 
 function placeBall(x, y, t) {
-  if (x <= 6 && y <= 6 && !isWin) {
+  if (x <= 6 && y <= 6  && x >= 0 && y >= 0 && !isWin) {
     if(board[x][y] == 0) {
       board[x][y] = t;
       var aaa = createSpan(placementToText(x, y));
@@ -335,12 +341,36 @@ function checkForWinner() {
 }
 
 function botMove() {
-  console.time("Bot: " + botPicker.value()  +" is thinking..." );
-  if(botPicker.value() == "Random") {
-    makeRandomMove();
-    
-  }
 
-  console.timeEnd("Bot: " + botPicker.value()  +" is thinking..." );
+  if(turn == 1) {
+    console.time("White team Bot: " + botPickerW.value()  +" is thinking..." );
+    if(botPickerW.value() == "Random") {
+      makeRandomMove();
+      
+    }
+    if(botPickerW.value() == "First Move") {
+      makeFirstMove();
+    }
+    if(botPickerW.value() == "Last Move") {
+      makeLastMove();
+    }
+    console.timeEnd("White team Bot: " + botPickerW.value()  +" is thinking..." );
+    return;
+  }
+  if(turn == 2) {
+    console.time("Black team Bot: " + botPickerB.value()  +" is thinking..." );
+    if(botPickerB.value() == "Random") {
+      makeRandomMove();
+      
+    }
+    if(botPickerB.value() == "First Move") {
+      makeFirstMove();
+    }
+    if(botPickerB.value() == "Last Move") {
+      makeLastMove();
+    }
+    console.timeEnd("Black team Bot: " + botPickerB.value()  +" is thinking..." );
+    return;
+  }
 }
 
