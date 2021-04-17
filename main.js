@@ -6,7 +6,7 @@ var isSpun, isPlaced, isTurn, isWin;
 var botPickerW;
 var botPickerB;
 var botMover;
-var botOptions = ["Random", "First Move", "Last Move"];
+var botOptions = ["Random", "First Move", "Last Move", "Huddle", "Introvert"];
 
 function setup() {
   isPlaced = false;
@@ -15,7 +15,7 @@ function setup() {
   createCanvas(600, 600);
   isSpun = false;
   turn = 1;
-  isTurn = createInput("White's turn");
+  isTurn = createP("White's turn");
   var p1 = createP("");
   spinw = createButton("Spin top-left_____[W]");
   spinw.mousePressed(spinW);
@@ -173,11 +173,11 @@ function rotateGrid(ox, oy) {
 
     if(turn == 1) {
       turn = 2;
-      isTurn.value("Black's turn");
+      isTurn.html("Black's turn");
     }
     else {
       turn = 1;
-      isTurn.value("White's turn");
+      isTurn.html("White's turn");
     }
     isPlaced = false;
     //isSpun = true;
@@ -228,6 +228,7 @@ function isWinner() {
   var countB = 0;
   var occupiedSpots = 0;
 
+  //horizontals
   for(var i = 0; i < 6; i++) {
     for(var j = 0; j < 6; j++) {
       var val = board[i][j];
@@ -248,7 +249,7 @@ function isWinner() {
         countA = 0;
         countB = 0;
       }
-     // console.log(countA);
+      //console.log(countA);
       //console.log(countB);
       if(countA >= 5) {
         console.timeEnd("winEvaluation");
@@ -259,6 +260,9 @@ function isWinner() {
         console.timeEnd("winEvaluation");
         return 2;
       }
+
+      countA = 0;
+      countB = 0;
     }
 
     countA = 0;
@@ -268,6 +272,7 @@ function isWinner() {
   countA = 0;
   countB = 0;
 
+  //verticals
   for(var i = 0; i < 6; i++) {
     for(var j = 0; j < 6; j++) {
       var val = board[j][i];
@@ -305,6 +310,8 @@ function isWinner() {
     countA = 0;
     countB = 0;
   }
+  
+  //TODO - diagonals
 
   if(occupiedSpots == 36) {
     console.timeEnd("winEvaluation");

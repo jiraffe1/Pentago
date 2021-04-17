@@ -1,0 +1,3 @@
+function makeIntrovertMove() {
+  makeRandomMove();
+}
