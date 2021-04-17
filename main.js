@@ -1,13 +1,10 @@
 var board;
 var turn;
 var status;
-var spinw;
-var spinx;
-var spiny;
-var spinz;
-var isSpun ;
-var isPlaced;
-var isTurn;
+var spinw, spinx, spiny, spinz;
+var isSpun, isPlaced, isTurn;
+var botPicker;
+var botMover;
 
 function setup() {
   isPlaced = false;
@@ -16,17 +13,25 @@ function setup() {
   isSpun = false;
   turn = 1;
   isTurn = createInput("White's turn");
-  var placeholer = createP("");
-  spinw = createButton("Spin top-left");
+  var p1 = createP("");
+  spinw = createButton("Spin top-left_____[W]");
   spinw.mousePressed(spinW);
-  spinx = createButton("Spin top-right");
+  spinx = createButton("Spin top-right____[X]");
   spinx.mousePressed(spinX);
-  var plahooler = createP("");
-  spiny = createButton("Spin bottom-left");
+  var p2 = createP("");
+  spiny = createButton("Spin bottom-left__[Y]");
   spiny.mousePressed(spinY);
-  spinz = createButton("Spin bottom-right");
+  spinz = createButton("Spin bottom-right_[Z]");
   spinz.mousePressed(spinZ);
-  var placeholder = createP("");
+  var p3 = createP("");
+  var p4 = createP("");
+  botPicker = createSelect();
+  botPicker.option("Random");
+  botPicker.option("First Move");
+  botPicker.option("Last Move");
+  botMover = createButton("Ask the Bot what to do");
+  botMover.mousePressed(botMove);
+  var p6 = createP("");
   status = createP("Moves: ");
 }
 
@@ -79,6 +84,8 @@ function draw() {
 
     }
   }
+
+
 }
 
 function createGrid(a, b) {
@@ -100,13 +107,35 @@ function mousePressed() {
 
   if(board[gx][gy] == 0 && !isPlaced) {
     if (gx <= 6 && gy <= 6) {
-      board[gx][gy] = turn;
+      placeBall(gx, gy, turn);
       //console.log(placementToText(gx, gy));
       var aaa = createSpan(placementToText(gx, gy));
       //createDOM(placementToText(gx, gy));
       isPlaced = true;
       isSpun = false;
     }
+  }
+}
+
+function placeBall(x, y, t) {
+  board[x][y] = t;
+  checkForWinner();
+}
+
+function spinGrid(word) {
+  switch(word) {
+    case "W":
+      rotateGrid(0, 0);
+      break;
+    case "X":
+      rotateGrid(3, 0);
+      break;
+    case "Y":
+      rotateGrid(0, 3);
+      break;
+    case "Z":
+      rotateGrid(3, 3);
+      break;
   }
 }
 
@@ -142,7 +171,7 @@ function rotateGrid(ox, oy) {
     }
     isPlaced = false;
     //isSpun = true;
-
+    checkForWinner();
     if(ox == 0 && oy == 0) {
       var ss = createSpan("W, ");
     }
@@ -167,19 +196,19 @@ function placementToText(x, y) {
 }
 
 function spinW() {
-  rotateGrid(0, 0);
+  spinGrid("W");
 }
 
 function spinX() {
-  rotateGrid(3, 0);
+  spinGrid("X");
 }
 
 function spinY() {
-  rotateGrid(0, 3);
+  spinGrid("Y");
 }
 
 function spinZ() {
-  rotateGrid(3, 3);
+  spinGrid("Z");
 }
 
 function isWinner() {
@@ -204,8 +233,74 @@ function isWinner() {
         countA = 0;
         countB = 0;
       }
+     // console.log(countA);
+      //console.log(countB);
+      if(countA >= 5) {
+        return 1;
+      } 
+
+      if(countB >= 5) {
+        return 2;
+      }
     }
+
+    countA = 0;
+    countB = 0;
   }
 
-  return res;
+  for(var i = 0; i < 6; i++) {
+    for(var j = 0; j < 6; j++) {
+      var val = board[j][i];
+
+      if(val == 1) {
+        countA++;
+      }
+
+      if(val == 2) {
+        countB++;
+      }
+
+      if(val == 0) {
+        countA = 0;
+        countB = 0;
+      }
+      //console.log(countA);
+      //console.log(countB);
+      if(countA >= 5) {
+        return 1;
+      } 
+
+      if(countB >= 5) {
+        return 2;
+      }
+    }
+
+    countA = 0;
+    countB = 0;
+  }
+
+  return 0;
 }
+
+function checkForWinner() {
+  var winner = isWinner();
+
+  if(winner == 1) {
+    var win = createA("index.html", "WHITE WINS!");
+    console.log("White wins");
+
+  }
+  if(winner == 2) {
+    var win = createA("index.html", "BLACK WINS!");
+    console.log("Black wins");
+  }
+
+  console.log("Nobody wins:(");
+}
+
+function botMove() {
+  if(botPicker.value() == "Random") {
+    makeRandomMove();
+  }
+}
+
