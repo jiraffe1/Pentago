@@ -1,21 +1,23 @@
 html *
 {
-   font-family: Helvetica, arial !important;
-   font-size: 120% !important;
+  font-family: Helvetica, arial !important;
+  font-size: 110% !important;
 }
 html, body {
-    padding: 0;
+  padding: 0;
 	text-align: center;
 	color: Azure;
 }
 canvas {
-    display: block;
+  display: block;
 	padding: 5px 5px;
+	border:azure;
 	margin: auto;
 }
 iframe {
 	display: block;
 	padding: 5px 5px;
+	border:azure;
 	margin: auto;
 }
 a {
@@ -27,7 +29,7 @@ a {
 	display: inline-block;
 }
 input {
-    display: inline-block;	
+  display: inline-block;	
 	text-align: center;
 }
 h1, h2, h3 {
